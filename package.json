@@ -1,0 +1,28 @@
+{
+  "name": "aqa-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bohdana0209/aqa-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Bohdana0209/aqa-api/issues"
+  },
+  "homepage": "https://github.com/Bohdana0209/aqa-api#readme",
+  "devDependencies": {
+    "@jest/globals": "^30.2.0",
+    "cross-env": "^10.1.0",
+    "jest": "^30.2.0"
+  },
+  "dependencies": {
+    "axios": "^1.12.2"
+  }
+}
