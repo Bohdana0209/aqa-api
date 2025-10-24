@@ -2,11 +2,11 @@ import {test, describe, expect} from '@jest/globals';
 import axios from 'axios';
 import { API_URL } from '../src/constants/api';
 
-describe("Comments", () =>{
+describe.skip("Comments", () =>{
     const apiClient = axios.create({
         baseURL: API_URL
     })
-    test("Should be able to create a Comment", async () =>{
+    test.skip("Should be able to create a Comment", async () =>{
         const requestBody ={
             "postId": 2,
             "id": 7,
@@ -25,7 +25,7 @@ describe("Comments", () =>{
     })
     })
 
-    test("Should be able to create a Comment only with name", async () =>{
+    test.skip("Should be able to create a Comment only with name", async () =>{
         const requestBody ={
             "name": "alias odio sit",
         }

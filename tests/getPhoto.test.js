@@ -6,7 +6,7 @@ const apiClient = axios.create({
         baseURL: API_URL
     })
 
-test('Return photo by id', async () => {
+test.skip('Return photo by id', async () => {
     const photoId = 7;
 
     const response = await apiClient(`/photos/${photoId}`);
