@@ -7,7 +7,7 @@ import { CookieJar } from 'tough-cookie';
 import AuthController from '../../src/constants/controllers/AuthController';
 import CarsController from '../../src/constants/controllers/CarsController';
 
-describe("Create car", ()=>{
+describe("Get car brand by id", ()=>{
     const jar = new CookieJar()
     const client = wrapper(axios.create({
         baseURL: QAAUTO_API_URL,
@@ -41,37 +41,24 @@ beforeEach(async() => {
     expect(signInResponse.status).toBe(200);
 })
 
-test('Should be able to create a Car', async () => {
+test('Should be able to get car brand by id', async () => {
     const carBrandsResponse = await carsController.getCarBrands();
-    const brand = carBrandsResponse.data.data[0];
+    expect(carBrandsResponse.status).toBe(200);
 
-    const carModelsResponse = await carsController.getCarModels();
-    const model = carModelsResponse.data.data.find(model => model.carBrandId === brand.id);
+    const brandID = carBrandsResponse.data.data[0].id;
 
-    const requestBody = {
-        "carBrandId": brand.id,
-        "carModelId": model.id,
-        "mileage": faker.number.int({ min: 1, max: 500_000 })
-    };
+    const brandResponse = await carsController.getCarBrandByID(brandID);
+    expect(brandResponse.status).toBe(200);
+    
+    const brandData = brandResponse.data.data;
 
-    const response = await carsController.createCar(requestBody);
-    expect(response.status).toBe(201);
-
-    const createdCar = response.data.data;
-    const expectedData = {
-            "id": expect.any(Number),
-            "carBrandId": requestBody.carBrandId,
-            "carModelId": requestBody.carModelId,
-            "initialMileage": requestBody.mileage,
-            "carCreatedAt":  expect.any(String) , 
-            "updatedMileageAt":  expect.any(String) , 
-            "mileage": requestBody.mileage,
-            "brand": brand.title,
-            "model": model.title,
-            "logo": brand.logoFilename
-        }
-    expect(createdCar).toEqual(expectedData)
+    expect(brandData).toEqual(
+    expect.objectContaining({
+        id: brandID,
+        title: expect.any(String),
+        logoFilename: expect.any(String),
+    })
+  );
 })
 });
    
-

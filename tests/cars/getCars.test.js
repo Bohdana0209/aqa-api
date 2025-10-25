@@ -7,7 +7,7 @@ import { CookieJar } from 'tough-cookie';
 import AuthController from '../../src/constants/controllers/AuthController';
 import CarsController from '../../src/constants/controllers/CarsController';
 
-describe("Create car", ()=>{
+describe("Cars list", ()=>{
     const jar = new CookieJar()
     const client = wrapper(axios.create({
         baseURL: QAAUTO_API_URL,
@@ -41,7 +41,7 @@ beforeEach(async() => {
     expect(signInResponse.status).toBe(200);
 })
 
-test('Should be able to create a Car', async () => {
+test('Should be able to get cars', async () => {
     const carBrandsResponse = await carsController.getCarBrands();
     const brand = carBrandsResponse.data.data[0];
 
@@ -56,21 +56,25 @@ test('Should be able to create a Car', async () => {
 
     const response = await carsController.createCar(requestBody);
     expect(response.status).toBe(201);
+    
+    const userCarsResponse = await carsController.getUserCars();
+    expect(userCarsResponse.status).toBe(200);
 
-    const createdCar = response.data.data;
-    const expectedData = {
-            "id": expect.any(Number),
-            "carBrandId": requestBody.carBrandId,
-            "carModelId": requestBody.carModelId,
-            "initialMileage": requestBody.mileage,
-            "carCreatedAt":  expect.any(String) , 
-            "updatedMileageAt":  expect.any(String) , 
-            "mileage": requestBody.mileage,
-            "brand": brand.title,
-            "model": model.title,
-            "logo": brand.logoFilename
-        }
-    expect(createdCar).toEqual(expectedData)
+    const car = userCarsResponse.data.data[0];
+
+    expect(car).toEqual(
+    expect.objectContaining({
+      id: expect.any(Number),
+      carBrandId: expect.any(Number),
+      carModelId: expect.any(Number),
+      initialMileage: expect.any(Number),
+      mileage: expect.any(Number),
+      updatedMileageAt: expect.any(String),
+      brand: expect.any(String),
+      model: expect.any(String),
+      logo: expect.any(String),
+    })
+  );
 })
 });
    

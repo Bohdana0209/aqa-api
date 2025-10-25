@@ -7,7 +7,7 @@ import { CookieJar } from 'tough-cookie';
 import AuthController from '../../src/constants/controllers/AuthController';
 import CarsController from '../../src/constants/controllers/CarsController';
 
-describe("Create car", ()=>{
+describe("Car models", ()=>{
     const jar = new CookieJar()
     const client = wrapper(axios.create({
         baseURL: QAAUTO_API_URL,
@@ -41,37 +41,16 @@ beforeEach(async() => {
     expect(signInResponse.status).toBe(200);
 })
 
-test('Should be able to create a Car', async () => {
-    const carBrandsResponse = await carsController.getCarBrands();
-    const brand = carBrandsResponse.data.data[0];
+test('Should be able to get car models', async () => {
+   const carModelsResponse = await carsController.getCarModels();
+    expect(carModelsResponse.status).toBe(200);
+    expect(Array.isArray(carModelsResponse.data.data)).toBe(true);
 
-    const carModelsResponse = await carsController.getCarModels();
-    const model = carModelsResponse.data.data.find(model => model.carBrandId === brand.id);
+    const model = carModelsResponse.data.data[0];
 
-    const requestBody = {
-        "carBrandId": brand.id,
-        "carModelId": model.id,
-        "mileage": faker.number.int({ min: 1, max: 500_000 })
-    };
-
-    const response = await carsController.createCar(requestBody);
-    expect(response.status).toBe(201);
-
-    const createdCar = response.data.data;
-    const expectedData = {
-            "id": expect.any(Number),
-            "carBrandId": requestBody.carBrandId,
-            "carModelId": requestBody.carModelId,
-            "initialMileage": requestBody.mileage,
-            "carCreatedAt":  expect.any(String) , 
-            "updatedMileageAt":  expect.any(String) , 
-            "mileage": requestBody.mileage,
-            "brand": brand.title,
-            "model": model.title,
-            "logo": brand.logoFilename
-        }
-    expect(createdCar).toEqual(expectedData)
-})
+    expect(model).toHaveProperty('id');
+    expect(model).toHaveProperty('title');
+    expect(model).toHaveProperty('carBrandId');
 });
-   
 
+})

@@ -7,7 +7,7 @@ import { CookieJar } from 'tough-cookie';
 import AuthController from '../../src/constants/controllers/AuthController';
 import CarsController from '../../src/constants/controllers/CarsController';
 
-describe("Create car", ()=>{
+describe("Update car", ()=>{
     const jar = new CookieJar()
     const client = wrapper(axios.create({
         baseURL: QAAUTO_API_URL,
@@ -41,7 +41,7 @@ beforeEach(async() => {
     expect(signInResponse.status).toBe(200);
 })
 
-test('Should be able to create a Car', async () => {
+test('Should be able to edit car', async () => {
     const carBrandsResponse = await carsController.getCarBrands();
     const brand = carBrandsResponse.data.data[0];
 
@@ -56,21 +56,17 @@ test('Should be able to create a Car', async () => {
 
     const response = await carsController.createCar(requestBody);
     expect(response.status).toBe(201);
-
     const createdCar = response.data.data;
-    const expectedData = {
-            "id": expect.any(Number),
-            "carBrandId": requestBody.carBrandId,
-            "carModelId": requestBody.carModelId,
-            "initialMileage": requestBody.mileage,
-            "carCreatedAt":  expect.any(String) , 
-            "updatedMileageAt":  expect.any(String) , 
-            "mileage": requestBody.mileage,
-            "brand": brand.title,
-            "model": model.title,
-            "logo": brand.logoFilename
-        }
-    expect(createdCar).toEqual(expectedData)
+
+    const updatedMileage = faker.number.int({ min: 500000, max: 1000_000 });
+    const updateBody = { mileage: updatedMileage };
+
+    const updatedCar = await carsController.updateUserCar(createdCar.id,updateBody);
+    expect(updatedCar.status).toBe(200);
+
+    const carByIdResponse = await carsController.getUserCarById(createdCar.id);
+    expect(carByIdResponse.status).toBe(200);
+    expect(carByIdResponse.data.data.mileage).toBe(updatedMileage);
 })
 });
    
