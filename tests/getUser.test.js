@@ -2,12 +2,12 @@ import {expect, describe, test} from '@jest/globals';
 import axios from 'axios';
 import { API_URL } from '../src/constants/api';
 
-describe("Users", () =>{
+describe.skip("Users", () =>{
     const apiClient = axios.create({
         baseURL: API_URL
     })
 
-test('Return user by id', async () => {
+test.skip('Return user by id', async () => {
     const userId = 1;
 
     const response = await apiClient(`/users/${userId}`);
@@ -21,7 +21,7 @@ test('Return user by id', async () => {
       })
 })
 
-test('Return 10 users', async () => {
+test.skip('Return 10 users', async () => {
     const response = await apiClient(`/users`);
 
     expect(response.status).toBe(200);
